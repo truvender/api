@@ -11,6 +11,8 @@
         "laravel/framework": "^8.75",
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
+        "qoraiche/laravel-mail-editor": "^3.5",
+        "santigarcor/laratrust": "^6.3",
         "tymon/jwt-auth": "^1.0.2"
     },
     "require-dev": {
