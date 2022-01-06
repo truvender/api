@@ -16,3 +16,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+// Route::get('/test-notify', function() {
+//     $sendToken = sendSMSToken('2348057481320');
+//     return $sendToken;
+// });

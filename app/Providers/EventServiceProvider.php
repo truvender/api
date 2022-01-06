@@ -3,7 +3,13 @@
 namespace App\Providers;
 
 use Illuminate\Auth\Events\Registered;
-use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
+use App\Events\Verification;
+use App\Listeners\{
+    AssignRoleToUser,
+    CreateUserWallets,
+    SendVerificationTokens,
+    ResendVerificationToken,
+};
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
 
@@ -16,7 +22,13 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen = [
         Registered::class => [
-            SendEmailVerificationNotification::class,
+            AssignRoleToUser::class,
+            CreateUserWallets::class,
+            SendVerificationTokens::class,
+            GenerateAccountNumber::class,
+        ],
+        Verification::class => [
+            ResendVerificationToken::class,
         ],
     ];
 
