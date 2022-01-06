@@ -11,6 +11,8 @@ class Setting extends Model
 
     protected $guarded = ['id'];
 
+    public $timestamps = false;
+
     /**
      * Get the user that owns the Setting
      *

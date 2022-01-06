@@ -37,5 +37,19 @@ return [
         'sk' => env('WA_SECRET_KEY'),
         'url' => env('WA_BASE_URL'),
     ],
+    
+    'flutterwave-test' => [
+        'public_key' => env('FLUTTERWAVE_PUBLIC_KEY'),
+        'secrete_key' => env('FLUTTERWAVE_SECRETE_KEY'),
+        'encyt_key' => env('FLUTTERWAVE_ENCRYPTION_KEY'),
+        'root-url' => env('FLUTTERWAVE_ROOT_URL'),
+    ],
+
+    'flutterwave' => [
+        'public_key' => env('FLUTTERWAVE_TEST_PUBLIC_KEY'),
+        'secrete_key' => env('FLUTTERWAVE_TEST_SECRETE_KEY'),
+        'encyt_key' => env('FLUTTERWAVE_TEST_ENCRYPTION_KEY'),
+        'root-url' => env('FLUTTERWAVE_ROOT_URL'),
+    ],
 
 ];

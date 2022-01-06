@@ -80,7 +80,7 @@ class User extends Authenticatable implements JWTSubject
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function setting()
+    public function settings()
     {
         return $this->hasOne(Setting::class, 'user_id', 'id');
     }
@@ -92,7 +92,7 @@ class User extends Authenticatable implements JWTSubject
      */
     public function profile()
     {
-        return $this->hasOne(Prodile::class, 'user_id', 'id');
+        return $this->hasOne(Profile::class, 'user_id', 'id');
     }
 
     /**
@@ -102,7 +102,7 @@ class User extends Authenticatable implements JWTSubject
      */
     public function wallets()
     {
-        return $this->hasMany(Wallet::class, 'ser_id', 'id');
+        return $this->hasMany(Wallet::class, 'user_id', 'id');
     }
 
 
@@ -114,6 +114,16 @@ class User extends Authenticatable implements JWTSubject
     public function tokens()
     {
         return $this->hasMany(Token::class, 'user_id', 'id');
+    }
+
+    /**
+     * Get all of the transactions for the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class, 'user_id', 'id');
     }
 
 }
