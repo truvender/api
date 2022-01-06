@@ -74,3 +74,19 @@ if (!function_exists('generatePasswordResetCode')) {
         return str_shuffle($code);
     }
 }
+
+
+if (!function_exists('uploadFile')) {
+    function uploadFile($file, $path)
+    {
+        
+    }
+}
+
+
+if (!function_exists('deleteFile')) {
+    function deleteFile($path)
+    {
+
+    }
+}

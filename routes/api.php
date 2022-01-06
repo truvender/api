@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\v1\Authentication;
+use App\Http\Controllers\Api\v1\Dashboards;
 
 /*
 |--------------------------------------------------------------------------
@@ -68,6 +69,14 @@ Route::prefix('v1')->group( function ()
             Route::post('otp/challenge', [Authentication::class, 'sendOtp']);
             Route::post('otp/verify', [Authentication::class, 'verifyOtp']);
         });
+    });
+
+
+    Route::middleware(['auth:api'])->group(function () {
+        /**
+         * User Routes
+         */
+        Route::get('/session/user', [Dashboards::class, 'userSessionData']);
     });
 
     

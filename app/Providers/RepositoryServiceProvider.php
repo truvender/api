@@ -4,8 +4,10 @@ namespace App\Providers;
 
 use App\Interfaces\{
     AuthInterface,
+    DashboardInterface,
 };
 use App\Repositories\AuthRepository;
+use App\Repositories\DashboardRepository;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -28,5 +30,6 @@ class RepositoryServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->app->bind(AuthInterface::class, AuthRepository::class );
+        $this->app->bind(DashboardInterface::class, DashboardRepository::class);
     }
 }
