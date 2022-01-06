@@ -3,9 +3,13 @@
 namespace App\Providers;
 
 use Illuminate\Auth\Events\Registered;
-use App\Listeners\SendVerificationTokens;
-use App\Listeners\CreateUserWallets;
-use App\Listeners\AssignRoleToUser;
+use App\Events\Verification;
+use App\Listeners\{
+    AssignRoleToUser,
+    CreateUserWallets,
+    SendVerificationTokens,
+    ResendVerificationToken,
+};
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
 
@@ -22,6 +26,9 @@ class EventServiceProvider extends ServiceProvider
             CreateUserWallets::class,
             SendVerificationTokens::class,
             GenerateAccountNumber::class,
+        ],
+        Verification::class => [
+            ResendVerificationToken::class,
         ],
     ];
 

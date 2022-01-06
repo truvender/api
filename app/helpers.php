@@ -47,3 +47,30 @@ if (!function_exists('sendSMSToken')) {
         return $response;
     }
 }
+
+if (!function_exists('verifySMSToken')) {
+    function verifySMSToken($pin_id, $pin)
+    {
+        $data = array(
+            "api_key" => config('services.termii.key'),
+            "pin_id" => $pin_id,
+            "pin" => $pin,
+        );
+
+        $endpoint = "https://termii.com/api/sms/otp/verify";
+        $response = Http::post($endpoint, $data)->json();
+
+        return $response;
+    }
+}
+
+
+if (!function_exists('generatePasswordResetCode')) {
+    function generatePasswordResetCode()
+    {
+        $partOne = substr(str_shuffle("ABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 3);
+        $partTwo = substr(str_shuffle("0123456789"), 0, 4);
+        $code = $partOne . $partTwo;
+        return str_shuffle($code);
+    }
+}

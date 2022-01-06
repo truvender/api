@@ -9,8 +9,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Laratrust\Traits\LaratrustUserTrait;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
     use LaratrustUserTrait;
     use HasApiTokens, HasFactory, Notifiable;
@@ -25,7 +26,10 @@ class User extends Authenticatable
         'username',
         'email',
         'phone',
-        'referrer_id', 'has_verify_otp',
+        'referrer_id', 
+        'has_verify_otp',
+        'phone_verified_at',
+        'email_verified_at',
         'profile_photo_path',
         'password',
     ];
@@ -47,6 +51,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'phone_verified_at' => 'datetime'
     ];
 
     /**
@@ -98,6 +103,17 @@ class User extends Authenticatable
     public function wallets()
     {
         return $this->hasMany(Wallet::class, 'ser_id', 'id');
+    }
+
+
+    /**
+     * Get all of the tokens for the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function tokens()
+    {
+        return $this->hasMany(Token::class, 'user_id', 'id');
     }
 
 }

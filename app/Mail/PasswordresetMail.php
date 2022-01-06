@@ -7,18 +7,21 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class VerificationMail extends Mailable implements ShouldQueue
+class PasswordresetMail extends Mailable
 {
     use Queueable, SerializesModels;
+
+    public $user, $token;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($user, $token)
     {
-        //
+        $this->user = $user;
+        $this->token = $token;
     }
 
     /**
@@ -28,6 +31,9 @@ class VerificationMail extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        return $this->markdown('emails.verification-mail')->subject("Email Verification");
+        return $this->markdown('emails.password-reset-mail', [
+            'user' => $this->user,
+            'token' => $this->token
+        ])->subject("Password Reset");
     }
 }

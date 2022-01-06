@@ -20,4 +20,10 @@ class Token extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+
+    public function isExpired()
+    {
+        return $this->expire_at <= now();
+    }
 }

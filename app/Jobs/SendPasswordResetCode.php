@@ -2,9 +2,8 @@
 
 namespace App\Jobs;
 
-use App\Models\Token;
 use Illuminate\Bus\Queueable;
-use App\Mail\VerificationMail;
+use App\Mail\PasswordresetMail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -12,10 +11,10 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 
-class SendEmailVerificationToken implements ShouldQueue
+class SendPasswordResetCode implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
+    
     private $user;
     /**
      * Create a new job instance.
@@ -35,19 +34,19 @@ class SendEmailVerificationToken implements ShouldQueue
     public function handle()
     {
         $user = $this->user;
-        $code = generateToken();
+        $code = generatePasswordResetCode();
+        
+        $tokens = $user->tokens()->where('type', 'mail')->get();
+        $tokens->each->delete();
 
-        $token = Token::whereUserId($user->id)->where('type', 'mobile')->get();
-        $token->each->delete();
-
-        // Save Email Token
-        $token = Token::create([
-            'user_id' => $user->id,
+        // Save the reset code to db
+        $token = $user->tokens()->create([
             'code' => $code,
             'type' => 'mail',
             'expire_at' => now()->addMinutes(5)
         ]);
-        
-        Mail::to($user)->send(new VerificationMail($user, $token));
+
+        // send mail to user with the reset password token
+        Mail::to($user)->send(new PasswordresetMail($user, $token));
     }
 }

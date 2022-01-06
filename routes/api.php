@@ -69,4 +69,6 @@ Route::prefix('v1')->group( function ()
             Route::post('otp/verify', [Authentication::class, 'verifyOtp']);
         });
     });
+
+    
 });

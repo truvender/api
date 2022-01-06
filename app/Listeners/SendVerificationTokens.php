@@ -31,7 +31,6 @@ class SendVerificationTokens
     public function handle(Registered $event)
     {
         $user = $event->user;
-        
         SendWelcomeEmail::dispatchSync($user);
         SendEmailVerificationToken::dispatch($user)->delay(now()->addSeconds(10));
         SendPhoneVerificationToken::dispatch($user)->delay(now()->addSeconds(10));

@@ -38,10 +38,13 @@ class SendPhoneVerificationToken implements ShouldQueue
         $phone = cleanPhone($user->phone);
         $sendToken = sendSMSToken($phone);
 
-        MobileList::create([
-            'user_id' => $user->id,
-            'phone' => $phone
-        ]);
+        $checkPhoneInMobileList = MobileList::where('phone', $phone)->first();
+        if(!$checkPhoneInMobileList){
+            MobileList::create([
+                'user_id' => $user->id,
+                'phone' => $phone
+            ]);
+        }
         
         $token = Token::whereUserId($user->id)->where('type', 'mobile')->get();
         $token->each->delete();

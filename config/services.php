@@ -32,5 +32,10 @@ return [
     'termii' => [
         'key' => env('TERMII_API_KEY')
     ],
+    'wallets_africa' => [
+        'pk' => env('WA_PUBLIC_KEY'),
+        'sk' => env('WA_SECRET_KEY'),
+        'url' => env('WA_BASE_URL'),
+    ],
 
 ];
