@@ -22,6 +22,7 @@ class CreateWalletsTable extends Migration
             $table->string('address')->nullable()->comment("crypto wallet address");
             $table->string('private')->nullable()->comment("crypto wallet key");
             $table->string('public')->nullable()->comment("crypto wallet key");
+            $table->string('wif')->nullable()->comment("crypto wallet wif key");
             $table->string('label')->nullable();
             $table->timestamps();
         });

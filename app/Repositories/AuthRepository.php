@@ -45,7 +45,7 @@ class AuthRepository implements AuthInterface {
                 'user_id' => $user->id
             ]);
 
-            $settings =  $user->setting()->create([
+            $settings =  $user->settings()->create([
                 'notify_type' => null,
                 'require_otp' => false,
             ]);

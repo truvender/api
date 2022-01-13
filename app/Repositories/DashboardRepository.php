@@ -19,10 +19,14 @@ class DashboardRepository implements DashboardInterface {
         $wallets = $user->wallets;
         $role = $user->roles;
         $transactions = $user->transactions()->orderBy('created_at', 'desc')->with('metas')->get();
+        $banking_details = $user->bankingAccount;
+
+        $max_ngn_amount = 0; 
 
         return [
             'user' => $user,
-            'transactions' => $transactions
+            'transactions' => $transactions,
+            'banking_details' => $banking_details
         ];
     }
 

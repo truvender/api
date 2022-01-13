@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 
 if (!function_exists('generateToken')) {
     function generateToken()
@@ -79,7 +80,8 @@ if (!function_exists('generatePasswordResetCode')) {
 if (!function_exists('uploadFile')) {
     function uploadFile($file, $path)
     {
-        
+        $path = Storage::disk(env('FILESYSTEM_DRIVER'))->put($path, $file);
+        return $path; 
     }
 }
 
@@ -87,6 +89,155 @@ if (!function_exists('uploadFile')) {
 if (!function_exists('deleteFile')) {
     function deleteFile($path)
     {
+        return Storage::disk(env('FILESYSTEM_DRIVER'))->delete($path);
+    }
+}
+
+if (!function_exists('blockEndpoint')) {
+    function blockEndpoint($currency_symbol, $endpoint, $useToken = true)
+    {
+        $key = config('services.block_cypher.token');
+        $ev = config('services.block_cypher.env');
+        $base_url = config('services.block_cypher.url');
+
+        return $useToken ? $base_url . "/$currency_symbol/$ev/$endpoint?token=" . $key 
+            : $base_url . "$currency_symbol/$ev/$endpoint";
+    }
+}
+
+
+if (!function_exists('createCryptoTransaction')) {
+    function createCryptoTransaction($from, $to, $value, $currency_symbol)
+    {
+        $data = [
+            "inputs" => [
+                ["addresses" => [$to]]
+            ],
+            "outputs" => [
+                [
+                    "addresses" => [$from],
+                    "value" => $value
+                ]
+            ]
+        ];
+
+        $endpoint = blockEndpoint($currency_symbol, 'txs/new');
+        $createTx = Http::post($endpoint, $data)->json();
+
+        return $createTx;
+    }
+}
+
+if (!function_exists('cryptoTxDetails')) {
+    function cryptTxDetails($transaction_hash, $currency_symbol)
+    {
+        $endpoint = blockEndpoint($currency_symbol, 'txs/'. $transaction_hash, false);
+        $tx = Http::get($endpoint)->json();
+        return $tx;
+    }
+}
+
+if (!function_exists('tx_code')) {
+    function tx_code()
+    {
+        $codeWithEntropy = uniqid('TRTX-', true);
+        $split = explode('.', $codeWithEntropy);
+        $code = $split[0] . '-' . $split[1];
+        return $code;
+    }
+}
+
+
+/**
+ * validate fiat Transactions
+ */
+if (!function_exists("validateTx")) {
+    function validateTx($ref)
+    {
+        $base_url = config('services.flutterwave.root-url');
+        $key = config('services.flutterwave.secrete_key');
+
+        $endpoint = $base_url . "transactions/$ref/verify";
+        $request = Http::withHeaders(['Authorization' => 'Bearer ' . $key])->get($endpoint)
+            ->json();
+
+        $data = $request['data'];
+        if($request['status'] == 'success'){
+            return [
+                'status' => true,
+                'verified' => $data['status'] == 'successful' ? true : false,
+                'data' => $data,
+            ];
+        }
+        return [ 'status' => false, 'verified' => false, 'data' => null ];
 
     }
 }
+
+if (!function_exists('getTxFee')) {
+    function getTxFee($amount)
+    {
+        $percentage = config('services.tx_fees.');
+        $fee = ($amount / 100) * $percentage;
+        return $fee;
+    }
+}
+
+if (!function_exists('validateAccount')) {
+    function validateAccount($bank, $account)
+    {
+        $base_url = config('services.flutterwave.root-url');
+        $endpoint = $base_url . 'accounts/resolve';
+        $key = config('services.flutterwave.secrete_key');
+
+        $response = Http::withHeaders(['Authorization' => 'Bearer ' . $key])->post($endpoint, [
+            'account_number' => $account,
+            'account_bank' => $bank
+        ])->json();
+
+        if ($response['status'] == 'success') {
+            return [
+                'status' => true,
+                'data' => $response['data']
+            ];
+        }
+        return [
+            'status' => false,
+            'data' => null
+        ];
+    }
+}
+
+if (!function_exists('bankTransfer')) {
+    function bankTransfer(array $data) : array
+    {
+        $base_url = config('services.flutterwave.root-url');
+        $key = config('services.flutterwave.secrete_key');
+        //Transfer Endpoint
+        $endpoint = $base_url.'transfers';
+        
+        $request = Http::withHeaders(['Authorization' => 'Bearer ' . $key])->post($endpoint, [
+            'account_bank' => $data['bank_code'],
+            'account_number' => $data['account_number'],
+            'amount' => $data['amount'],
+            'naration' => $data['ref'],
+            'currency' => 'NGN',
+            'beneficiary_name' => $data['account_name'],
+            'reference' => strtolower($data['ref']),
+            'callback_url' => $data['callback'],
+        ])->json();
+
+        if($request['status'] == 'success'){
+            return [
+                'status' => true,
+                'data' => $request['data'],
+            ];
+        }else{
+            return [
+                'status' => false,
+                'data' => null
+            ];
+        }
+    }
+}
+
