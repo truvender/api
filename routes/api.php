@@ -5,8 +5,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\v1\Dashboards;
-use App\Http\Controllers\Api\v1\Authentication;
+use App\Http\Controllers\Api\v1\{
+    Wallet,
+    Profiles,
+    Dashboards,
+    Authentication,
+};
 
 /*
 |--------------------------------------------------------------------------
@@ -95,6 +99,13 @@ Route::prefix('v1')->group( function ()
             Route::prefix('crypto')->group(function () {
                 Route::post('new-wallet', [Wallet::class, 'newCryptoWallet']);
                 Route::post('transfer', [Cryptos::class, 'transfer']);
+            });
+
+            Route::group(['prefix' => 'profile'], function () {
+                Route::post('/update', [Profiles::class, 'updateProfile']);
+                Route::post('/banking-detail/add', [Profiles::class, 'addAccount']);
+                Route::post('/change-password', [Profiles::class, 'changePassword']);
+                Route::post('/settings', [Profiles::class, 'changeSettings']);
             });
 
         });

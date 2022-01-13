@@ -85,6 +85,13 @@ if (!function_exists('uploadFile')) {
     }
 }
 
+if (!function_exists('getFileUrl')) {
+    function getFileUrl($path)
+    {
+        return Storage::disk(env('FILESYSTEM_DRIVER'))->url($path);
+    }
+}
+
 
 if (!function_exists('deleteFile')) {
     function deleteFile($path)

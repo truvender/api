@@ -18,6 +18,7 @@ class CreateSettingsTable extends Migration
             $table->string('user_id');
             $table->boolean('notify_type')->nullable();
             $table->boolean('require_otp')->default(false);
+            $table->string('access_pin')->nullable();
         });
     }
 
