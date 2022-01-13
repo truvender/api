@@ -52,4 +52,10 @@ return [
         'root-url' => env('FLUTTERWAVE_ROOT_URL'),
     ],
 
+    'block_cypher' => [
+        'url' => env('BLOCK_CYPHER_URL', 'https://api.blockcypher.com/v1'),
+        'token' => env('BLOCK_CYPHER_TOKEN'),
+        'env' => env('BLOCK_CYPHER_ENV'),
+    ],
+
 ];

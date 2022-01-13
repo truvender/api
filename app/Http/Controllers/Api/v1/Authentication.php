@@ -30,7 +30,7 @@ class Authentication extends Controller
      */
     public function register(Register $request)
     {
-        try {
+        // try {
 
             $createUser = $this->interface->register($request);
 
@@ -39,10 +39,10 @@ class Authentication extends Controller
             }
 
             return $this->success($createUser, 'Sign up was Successful', 201);
-        } catch (\Throwable $err) {
+        // } catch (\Throwable $err) {
             
-            return $this->error($err->getMessage(), 500, null);
-        }
+        //     return $this->error($err->getMessage(), 500, null);
+        // }
     }
 
 

@@ -116,14 +116,26 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(Token::class, 'user_id', 'id');
     }
 
+
     /**
      * Get all of the transactions for the User
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
      */
     public function transactions()
     {
-        return $this->hasMany(Transaction::class, 'user_id', 'id');
+        return $this->hasManyThrough(Transaction::class, Wallet::class);
+    }
+
+
+    /**
+     * Get the bankingAccount associated with the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function bankingAccount()
+    {
+        return $this->hasOne(BankAccount::class, 'user_id', 'id');
     }
 
 }

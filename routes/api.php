@@ -1,9 +1,12 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\v1\Authentication;
 use App\Http\Controllers\Api\v1\Dashboards;
+use App\Http\Controllers\Api\v1\Authentication;
 
 /*
 |--------------------------------------------------------------------------
@@ -77,6 +80,24 @@ Route::prefix('v1')->group( function ()
          * User Routes
          */
         Route::get('/session/user', [Dashboards::class, 'userSessionData']);
+
+        /**
+         * User wallet routes
+         */
+        Route::group(['prefix' => 'wallet'], function () {
+
+            Route::post('wallets', [Wallet::class, 'userWallet']);
+            Route::group(['prefix' => 'fiat'], function () {
+                Route::post('fund', [Wallet::class, 'nairaFund']);
+                Route::post('fund/complete', [Wallet::class, 'completeFund']);
+                Route::post('transfer', [Wallet::class, 'transfer']);
+            });
+            Route::prefix('crypto')->group(function () {
+                Route::post('new-wallet', [Wallet::class, 'newCryptoWallet']);
+                Route::post('transfer', [Cryptos::class, 'transfer']);
+            });
+
+        });
     });
 
     
