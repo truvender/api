@@ -13,7 +13,7 @@ class Cable extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,10 @@ class Cable extends FormRequest
     public function rules()
     {
         return [
-            //
+            'card_number' => 'required',
+            'provider' => 'required',
+            'variation_code' => 'required',
+            'pay_from' => 'required'
         ];
     }
 }
