@@ -58,4 +58,10 @@ return [
         'env' => env('BLOCK_CYPHER_ENV'),
     ],
 
+    'vtu' => [
+        'url' => env('VTU_BASE_URL'),
+        'username' => env('VTU_USERNAME'),
+        'pass' => env('VTU_PASS')
+    ],
+
 ];

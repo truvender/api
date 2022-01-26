@@ -75,6 +75,14 @@ class User extends Authenticatable implements JWTSubject
     }
 
 
+    public function getProfilePhotoAttributes()
+    {
+        return $this->profile_photo_path == null ? 
+            "https://avatars.dicebear.com/api/identicon/$this->username.svg" : 
+            getFileUrl($this->profile_photo_path);
+    }
+
+
     /**
      * Get the setting associated with the User
      *

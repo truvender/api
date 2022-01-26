@@ -12,5 +12,7 @@ interface WalletInterface {
     public function completeDefaultWalletFunding($request);
 
     public function fundDefaultWallet($request);
+
+    public function transfer($request);
     
 }

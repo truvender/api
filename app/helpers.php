@@ -85,6 +85,13 @@ if (!function_exists('uploadFile')) {
     }
 }
 
+if (!function_exists('getFileUrl')) {
+    function getFileUrl($path)
+    {
+        return Storage::disk(env('FILESYSTEM_DRIVER'))->url($path);
+    }
+}
+
 
 if (!function_exists('deleteFile')) {
     function deleteFile($path)
@@ -238,6 +245,15 @@ if (!function_exists('bankTransfer')) {
                 'data' => null
             ];
         }
+    }
+}
+
+
+if (!function_exists('cryptoMarketPrice')){
+    function cryptoMarketPrice($id)
+    {
+        $endpoint = "https://api.coingecko.com/api/v3/coins/$id?localization=false&tickers=false&community_data=true&developer_data=true&sparkline=false";
+        $request  = Http::get($endpoint)->json();
     }
 }
 
