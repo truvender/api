@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\v1\{
+    Bills,
     Wallet,
     Profiles,
     Dashboards,
@@ -106,6 +107,12 @@ Route::prefix('v1')->group( function ()
                 Route::post('/banking-detail/add', [Profiles::class, 'addAccount']);
                 Route::post('/change-password', [Profiles::class, 'changePassword']);
                 Route::post('/settings', [Profiles::class, 'changeSettings']);
+            });
+
+            Route::group(['prefix' => 'bills'], function () {
+                Route::post('purchase-airtime', [Bills::class, 'buyAirtime']);
+                Route::post('purchase-data', [Bills::class, 'dataPurchase']);
+                Route::post('cable-subscription', [Bills::class, 'subscribeCable']);
             });
 
         });

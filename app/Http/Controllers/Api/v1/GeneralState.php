@@ -48,9 +48,9 @@ class GeneralState extends Controller
         });
     }
 
-    private function getBillVariations($type)
+    private function getBillVariations()
     {
-        $variations = Variation::where('type', $type)->get();
+        $variations = Variation::all();
         return $variations;
     }
 
