@@ -6,6 +6,7 @@ interface BillInterface {
 
     public function airtimePurchase($request);
 
-    public function prchaseData($request);
-    
+    public function purchaseData($request);
+
+    public function cableSubscription($request);
 }

@@ -166,8 +166,60 @@ class BillRepository implements BillInterface {
     }
 
 
+    /**
+     * Verify customer with vtu.ng
+     */
+    private function verifyCustomer($data)
+    {
 
-    public function prchaseData($request)
+        $baseUrl = config('services.vtu.url');
+        $user = config('services.vtu.username');
+        $pass = config('services.vtu.pass');
+        $variation = $data['type'] == 'electricity' ? '&variation_id=prepaid' : null;
+        $endpoint = $baseUrl . "verify-customer?username=" 
+            . $user . "&password=" . $pass . "&customer_id=" 
+            . $data['customer_id'] . "&service_id=" 
+            . $data['service_id'] . $variation;
+        $request = Http::get($endpoint)->json();
+
+        return [
+            'status' => $request['code'] == 'success' ? true : false,
+            'message' => $request['message'],
+            'data' => $request['code'] == 'success' ? $request['data'] : null
+        ];
+    }
+
+
+    /**
+     * Cable subscription with wtu.ng
+     */
+    private function subscribeCable($data)
+    {
+        $baseUrl = config('services.vtu.url');
+        $user = config('services.vtu.username');
+        $pass = config('services.vtu.pass');
+        $endpoint = $baseUrl . "data?username=$user&password=$pass&phone=" 
+            . $data['customer'] . "&service_id=" . $data['provider'] 
+            . "&smartcard_number=" . $data['smart_card'] 
+            . "&variation_id=" . $data['variation_id'];
+        $request = Http::get($endpoint)->json();
+
+        if ($request['code'] == 'success') {
+            return [
+                'status' => true,
+                'data' => $request['data'],
+            ];
+        }
+
+        return [
+            'status' => false,
+            'data' => null,
+            'message' => $request['message'],
+        ];
+    }
+
+
+    public function purchaseData($request)
     {
         return DB::transaction(function () use ($request) {
             $user = auth()->user();
@@ -227,6 +279,69 @@ class BillRepository implements BillInterface {
                     'data' => $transaction,
                 ];
             }
+        });
+    }
+
+
+    public function cableSubscription($request)
+    {
+        return DB::transaction(function () use ($request) {
+
+            $user = auth()->user();
+            $pay_option = $request->pay_from;
+            $amount = $request->amount;
+            $provider = $request->provider;
+            $wallet = $user->wallets()->where('type', 'fiat')->sole();
+            $smart_card = $request->card_number;
+            $customer = cleanPhone($user->phone);
+
+            $variation = $this->getVariation($request->variation_code);
+            // $amount = $variation->charge;
+
+            $customerVerification = $this->verifyCustomer([
+                'type' => 'cable',
+                'customer_id' => $smart_card,
+                'service_id' => $provider,
+                'variation_id' => null,
+            ]);
+
+            if ($customerVerification['status'] == true) {
+                $subscription = $this->subscribeCable([
+                    'customer' => $customer,
+                    'provider' => $provider,
+                    'variation_id' => $variation,
+                    'smart_card' => $smart_card,
+                    'variation_id' => $variation->code
+                ]);
+
+                if($subscription['status'] == true){
+
+                    $recordTransaction = $this->createBillTransaction([
+                        'provider' => $provider,
+                        'amount' => $amount,
+                        'wallet_id' => $wallet->id,
+                        'customer' => $customer
+                    ], 'airtime');
+
+                    $transaction = $recordTransaction['transaction'];
+
+                    return [
+                        'status' => true,
+                        'message' => $variation . ' data purchase was successful',
+                        'data' => $transaction,
+                    ];
+                }
+                return [
+                    'status' => false,
+                    'message' => 'could not complete request',
+                    'data' => null,
+                ];
+            }
+            return [
+                'status' => false,
+                'message' => 'Invalid Smart card number',
+                'data' => null,
+            ];
         });
     }
     
