@@ -7,4 +7,5 @@ interface BillInterface {
     public function airtimePurchase($request);
 
     public function prchaseData($request);
+    
 }
