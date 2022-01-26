@@ -316,6 +316,12 @@ class BillRepository implements BillInterface {
 
                 if($subscription['status'] == true){
 
+                    if (strtolower($pay_option) == 'ngn') {
+                        $wallet->update([
+                            'balance' => $wallet->balance - $amount
+                        ]);
+                    }
+
                     $recordTransaction = $this->createBillTransaction([
                         'provider' => $provider,
                         'amount' => $amount,
