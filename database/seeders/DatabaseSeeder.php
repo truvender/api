@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             Cryptos::class,
             Countries::class,
             Banks::class,
+            Variation::class,
        ]);
     }
 }

@@ -248,3 +248,12 @@ if (!function_exists('bankTransfer')) {
     }
 }
 
+
+if (!function_exists('cryptoMarketPrice')){
+    function cryptoMarketPrice($id)
+    {
+        $endpoint = "https://api.coingecko.com/api/v3/coins/$id?localization=false&tickers=false&community_data=true&developer_data=true&sparkline=false";
+        $request  = Http::get($endpoint)->json();
+    }
+}
+

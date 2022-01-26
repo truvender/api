@@ -8,6 +8,7 @@ use App\Models\FiatRate;
 use Illuminate\Http\Request;
 use App\Http\Traits\ApiResponse;
 use App\Http\Controllers\Controller;
+use App\Models\Variation;
 
 class GeneralState extends Controller
 {
@@ -47,6 +48,12 @@ class GeneralState extends Controller
         });
     }
 
+    private function getBillVariations($type)
+    {
+        $variations = Variation::where('type', $type)->get();
+        return $variations;
+    }
+
     /**
      * Handle the incoming request.
      *
@@ -61,6 +68,7 @@ class GeneralState extends Controller
                 'countries' => $this->getCountries(),
                 'fiat_rates' => $this->getFiatRatesToNaira(),
                 'min_ngn_amount' => config('truvender.min_trx_ngn'),
+                'bill_variations' => $this->getBillVariations()
             ], 'request approved!');
         } catch (\Throwable $err) {
             return $this->error($err->getMessage(), 500, null);
