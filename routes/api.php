@@ -38,7 +38,7 @@ Route::prefix('v1')->group( function ()
     Route::group(['prefix' => 'desk'], function () {
     //     Route::post('contact', [Desk::class, 'contact']);
         Route::post('faq/answer', [Support::class, 'answerQuestion']);
-        // Route::post('add/promo/banner', [Desk::class, 'getBanner']);
+        Route::post('add/promo/banner', [Support::class, 'addBanner']);
 
         Route::group(['prefix' => 'blog'], function () {
             Route::get('/post/{slug}', [Posts::class, 'get']);

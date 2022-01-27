@@ -7,6 +7,7 @@ use App\Http\Traits\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Interfaces\SupportInterface;
 use App\Http\Requests\Support\AnswerQuestion;
+use App\Http\Requests\Support\PromotionBanner;
 
 class Support extends Controller
 {
@@ -20,12 +21,27 @@ class Support extends Controller
 
     /**
      * Create an answer to frequently asked Questions
+     * @param AnswerQuestion $request
      */
     public function answerQuestion(AnswerQuestion $request)
     {
         try {
             $storeAnswer = $this->interface->answerQuestion($request);
             return $this->success($storeAnswer, 'request approved!');
+        } catch (\Throwable $err) {
+            return $this->error($err->getMessage(), 500);
+        }
+    }
+
+    /**
+     * Add promotion banner
+     * @param 
+     */
+    public function addBanner(PromotionBanner $request)
+    {
+        try {
+            $promotion = $this->interface->addPromotion($request);
+            return $this->success($promotion, 'request approved!');
         } catch (\Throwable $err) {
             return $this->error($err->getMessage(), 500);
         }
