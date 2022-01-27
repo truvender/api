@@ -32,4 +32,36 @@ class Post extends Model
     {
         return $this->belongsTo(PostCategory::class, 'category_id');
     }
+
+
+    /**
+     * 
+     * return hint of post body
+     */
+    public function truncate_body($limit)
+    {
+        $text = $this->body;
+        if (str_word_count($text, 0) > $limit) {
+            $words = str_word_count($text, 2);
+            $pos   = array_keys($words);
+            $text  = substr($text, 0, $pos[$limit]) . '...';
+        }
+
+        return $text;
+    }
+
+    public function formatOutput()
+    {
+        return [
+            'id' => $this->id,
+            'author' => $this->user->username,
+            'title' => $this->title,
+            'slug' => $this->slug,
+            'image' => $this->featured_image,
+            'body' => $this->body,
+            'category' => $this->category->name,
+            'created_at' => $this->created_at,
+            'hint' => $this->truncate_body(50),
+        ];
+    }
 }

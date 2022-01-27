@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\v1\{
     Dashboards,
     Authentication,
     Posts,
+    Support,
 };
 
 /*
@@ -35,9 +36,9 @@ Route::prefix('v1')->group( function ()
     });
 
     Route::group(['prefix' => 'desk'], function () {
-    //     Route::post('contact', [Desk::class, 'contact']);
-    //     Route::get('faq', [Desk::class, 'faq']);
-    //     Route::get('promo/banner', [Desk::class, 'getBanner']);
+        Route::post('contact', [Support::class, 'sendContactMessage']);
+        Route::post('faq/answer', [Support::class, 'answerQuestion']);
+        Route::post('add/promo/banner', [Support::class, 'addBanner']);
 
         Route::group(['prefix' => 'blog'], function () {
             Route::get('/post/{slug}', [Posts::class, 'get']);
