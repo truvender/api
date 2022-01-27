@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Faq;
 use App\Models\Promotion;
+use App\Jobs\SendContactMessage;
 use App\Interfaces\SupportInterface;
 
 class SupportRepository implements SupportInterface {
@@ -30,6 +31,16 @@ class SupportRepository implements SupportInterface {
             'expires_at' => now()->parse($request->expires_date),
         ]);
         
+        return true;
+    }
+
+    public function contactSubmit($request)
+    {
+        SendContactMessage::dispatchAfterResponse([
+            'name' => $request->name,
+            'email' => $request->email,
+            'message' => $request->message,
+        ]);
         return true;
     }
     

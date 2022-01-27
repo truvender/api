@@ -8,4 +8,6 @@ interface SupportInterface {
 
     public function addPromotion($request);
 
+    public function contactSubmit($request);
+
 }

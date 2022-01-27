@@ -7,6 +7,7 @@ use App\Http\Traits\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Interfaces\SupportInterface;
 use App\Http\Requests\Support\AnswerQuestion;
+use App\Http\Requests\Support\Contact;
 use App\Http\Requests\Support\PromotionBanner;
 
 class Support extends Controller
@@ -42,6 +43,21 @@ class Support extends Controller
         try {
             $promotion = $this->interface->addPromotion($request);
             return $this->success($promotion, 'request approved!');
+        } catch (\Throwable $err) {
+            return $this->error($err->getMessage(), 500);
+        }
+    }
+
+
+    /**
+     * Send contact message to admin
+     * @param Contact $request
+     */
+    public function sendContactMessage(Contact $request)
+    {
+        try {
+            $this->interface->contactSubmit($request);
+            return $this->success(true, 'request approved!');
         } catch (\Throwable $err) {
             return $this->error($err->getMessage(), 500);
         }
