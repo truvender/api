@@ -9,6 +9,7 @@ use App\Interfaces\{
     DashboardInterface,
     BlogInterface,
     BillInterface,
+    SupportInterface,
 };
 use App\Repositories\{
     AuthRepository,
@@ -17,6 +18,7 @@ use App\Repositories\{
     WalletRepository,
     ProfileRepository,
     DashboardRepository,
+    SupportRepository,
 };
 use Illuminate\Support\ServiceProvider;
 
@@ -45,5 +47,6 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(ProfileInterface::class, ProfileRepository::class);
         $this->app->bind(BillInterface::class, BillRepository::class);
         $this->app->bind(BlogInterface::class, BlogRepository::class);
+        $this->app->bind(SupportInterface::class, SupportRepository::class);
     }
 }

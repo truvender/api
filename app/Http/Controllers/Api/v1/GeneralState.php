@@ -46,16 +46,7 @@ class GeneralState extends Controller
 
     private function getPosts()
     {
-        return Post::orderBy('created_at', 'desc')->get()->map(function($post){
-            return [
-                'id' => $post->id,
-                'title' => $post->title,
-                'slug' => $post->slug,
-                'image' => $post->featured_image,
-                'category' => $post->category->name,
-                'created_at' => $post->created_at
-            ];
-        });
+        return Post::orderBy('created_at', 'desc')->get()->map->formatOutput();
     }
 
    

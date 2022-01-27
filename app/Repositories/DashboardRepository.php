@@ -23,11 +23,17 @@ class DashboardRepository implements DashboardInterface {
 
         $max_ngn_amount = 0; 
 
-        return [
+        $data = [
             'user' => $user,
             'transactions' => $transactions,
             'banking_details' => $banking_details
         ];
+
+        if ($user->posts) {
+            $data['posts'] = $user->posts()->map->formatOutput();
+        }
+    
+        return $data;
     }
 
 }
