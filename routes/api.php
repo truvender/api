@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\v1\{
     Profiles,
     Dashboards,
     Authentication,
+    Posts,
 };
 
 /*
@@ -33,21 +34,18 @@ Route::prefix('v1')->group( function ()
         ];
     });
 
-    // Route::group(['prefix' => 'desk'], function () {
+    Route::group(['prefix' => 'desk'], function () {
     //     Route::post('contact', [Desk::class, 'contact']);
     //     Route::get('faq', [Desk::class, 'faq']);
     //     Route::get('promo/banner', [Desk::class, 'getBanner']);
 
-    //     Route::group(['prefix' => 'blog'], function () {
-    //         Route::get('/posts/{category?}', [Blog::class, 'index']);
-    //         Route::get('/post/{slug}', [Blog::class, 'get']);
-    //         Route::post('/post/create', [Blog::class, 'create']);
-    //         Route::post('/post/update', [Blog::class, 'update']);
-    //         Route::post('/post/delete', [Blog::class, 'delete']);
-    //         Route::post('/post/category/create', [Blog::class, 'categoryCreate']);
-    //         Route::get('/categories', [Blog::class, 'getCategories']);
-    //     });
-    // });
+        Route::group(['prefix' => 'blog'], function () {
+            Route::get('/post/{slug}', [Posts::class, 'get']);
+            Route::post('/post/create', [Posts::class, 'create']);
+            Route::post('/post/update', [Posts::class, 'update']);
+            Route::post('/post/delete', [Posts::class, 'delete']);
+        });
+    });
 
     /**
      * Authentication Routes
