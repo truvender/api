@@ -3,24 +3,19 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Models\Bank;
+use App\Models\Post;
 use App\Models\Country;
 use App\Models\FiatRate;
+use App\Models\Variation;
 use Illuminate\Http\Request;
 use App\Http\Traits\ApiResponse;
 use App\Http\Controllers\Controller;
-use App\Models\Variation;
 
 class GeneralState extends Controller
 {
     use ApiResponse;
 
-    /**
-     * get all countries
-     */
-    private function getCountries()
-    {
-        return $countries = Country::orderBy('name', 'asc')->get();
-    }
+
 
     /**
      * get all banks
@@ -48,11 +43,22 @@ class GeneralState extends Controller
         });
     }
 
-    private function getBillVariations()
+
+    private function getPosts()
     {
-        $variations = Variation::all();
-        return $variations;
+        return Post::orderBy('created_at', 'desc')->get()->map(function($post){
+            return [
+                'id' => $post->id,
+                'title' => $post->title,
+                'slug' => $post->slug,
+                'image' => $post->featured_image,
+                'category' => $post->category->name,
+                'created_at' => $post->created_at
+            ];
+        });
     }
+
+   
 
     /**
      * Handle the incoming request.
@@ -65,10 +71,12 @@ class GeneralState extends Controller
         try {
             return $this->success([
                 'banks' => $this->getBanks(),
-                'countries' => $this->getCountries(),
+                'countries' => Country::orderBy('name', 'asc')->get(),
                 'fiat_rates' => $this->getFiatRatesToNaira(),
                 'min_ngn_amount' => config('truvender.min_trx_ngn'),
-                'bill_variations' => $this->getBillVariations()
+                'bill_variations' => Variation::all(),
+                'posts' => $this->getPosts(),
+                
             ], 'request approved!');
         } catch (\Throwable $err) {
             return $this->error($err->getMessage(), 500, null);

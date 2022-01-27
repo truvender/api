@@ -248,6 +248,18 @@ if (!function_exists('bankTransfer')) {
     }
 }
 
+if (!function_exists('createUrlSlug')) {
+    function createUrlSlug($string)
+    {
+        $word_delimiter = '-';
+        $slug = iconv('UTF-8', 'ASCII//TRANSLIT', $input);
+        $slug = preg_replace("/[^a-zA-Z0-9\/_|+ -]/", '', $slug);
+        $slug = strtolower(trim($slug, '-'));
+        $slug = preg_replace("/[\/_|+ -]+/", $word_delimiter, $slug);
+        return $slug;
+    }
+}
+
 
 if (!function_exists('cryptoMarketPrice')){
     function cryptoMarketPrice($id)

@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             Countries::class,
             Banks::class,
             Variation::class,
+            PostCategory::class,
        ]);
     }
 }
