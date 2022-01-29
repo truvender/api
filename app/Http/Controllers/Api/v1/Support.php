@@ -62,4 +62,70 @@ class Support extends Controller
             return $this->error($err->getMessage(), 500);
         }
     }
+
+    /**
+     * Start conversations
+     * @param Request $request
+     */
+    public function startConversation(Request $request)
+    {
+        try {
+            $start = $this->interface->startConversation();
+            return $this->success(true, 'request approved!');
+        } catch (\Throwable $err) {
+            return $this->error($err->getMessage(), 500);
+        }
+    }
+
+    /**
+     * End conversations
+     * @param Request $request
+     */
+    public function endConversation(Request $request)
+    {
+        try {
+            $request->validate([
+                'conversation_id' => 'required'
+            ]);
+            $start = $this->interface->endConversation($request->conversation_id);
+            return $this->success(true, 'request approved!');
+        } catch (\Throwable $err) {
+            return $this->error($err->getMessage(), 500);
+        }
+    }
+
+
+    /**
+     * Accept conversations by a support team member
+     * @param Request $request
+     */
+    public function acceptConversation(Request $request)
+    {
+        try {
+            $request->validate([
+                'conversation_id' => 'required'
+            ]);
+            $start = $this->interface->acceptConversation($request->conversation_id);
+            return $this->success(true, 'request approved!');
+        } catch (\Throwable $err) {
+            return $this->error($err->getMessage(), 500);
+        }
+    }
+
+    /**
+     * Accept conversations by a support team member
+     * @param Request $request
+     */
+    public function newMessage(Request $request)
+    {
+        try {
+            $request->validate([
+                'message' => 'required'
+            ]);
+            $start = $this->interface->sendMessage($request);
+            return $this->success(true, 'request approved!');
+        } catch (\Throwable $err) {
+            return $this->error($err->getMessage(), 500);
+        }
+    }
 }

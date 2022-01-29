@@ -85,6 +85,15 @@ Route::prefix('v1')->group( function ()
          */
         Route::get('/session/user', [Dashboards::class, 'userSessionData']);
 
+
+
+        Route::group(['prefix' => 'support/conversation'], function (){
+            Route::post('start', [Support::class, 'startConversation']);
+            Route::post('accept', [Support::class, 'acceptConversation']);
+            Route::post('message', [Support::class, 'sendMessage']);
+            Route::post('close', [Support::class, 'endConversation']);
+        });
+
         /**
          * User wallet routes
          */
@@ -115,6 +124,17 @@ Route::prefix('v1')->group( function ()
             });
 
         });
+
+
+        Route::group(['prefix' => 'support'],function () {
+            Route::post('start-conversation', [Support::class, 'startConversation']);
+            Route::middleware(['conversation'])->group(function () {
+                Route::post('end-conversation', [Support::class, 'endConversation']);
+                Route::post('accept-conversation', [Support::class, 'acceptConversation']);
+                Route::post('send-message', [Support::class, 'newMessage']);
+            });
+        });
+        
     });
 
     
