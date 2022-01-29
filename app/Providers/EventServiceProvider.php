@@ -3,12 +3,16 @@
 namespace App\Providers;
 
 use Illuminate\Auth\Events\Registered;
-use App\Events\Verification;
+use App\Events\{
+    Verification,
+    NewConversation
+};
 use App\Listeners\{
     AssignRoleToUser,
     CreateUserWallets,
     SendVerificationTokens,
     ResendVerificationToken,
+    SendNotificationsToSupportTeam,
 };
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
@@ -29,6 +33,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         Verification::class => [
             ResendVerificationToken::class,
+        ],
+        NewConversation::class => [
+            SendNotificationsToSupportTeam::class
         ],
     ];
 
