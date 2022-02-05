@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\v1\{
     Profiles,
     Dashboards,
     Authentication,
+    GiftCards,
     Posts,
     Support,
 };
@@ -133,6 +134,11 @@ Route::prefix('v1')->group( function ()
                 Route::post('accept-conversation', [Support::class, 'acceptConversation']);
                 Route::post('send-message', [Support::class, 'newMessage']);
             });
+        });
+
+
+        Route::prefix('cards')->group(function () {
+            Route::get('list', [GiftCards::class, 'listGiftCards']);
         });
         
     });

@@ -17,7 +17,7 @@ class DashboardRepository implements DashboardInterface {
         $profile = $user->profile;
         $settings = $user->settings;
         $wallets = $user->wallets;
-        $role = $user->roles;
+        $role = $user->roles()->pluck('name')->get();
         $transactions = $user->transactions()->orderBy('created_at', 'desc')->with('metas')->get();
         $banking_details = $user->bankingAccount;
 

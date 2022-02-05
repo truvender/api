@@ -28,4 +28,17 @@ class Country extends Model
     }
 
 
+    /**
+     * The cards that belong to the Country
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function cards()
+    {
+        return $this->belongsToMany(
+            Card::class, 'crad_country', 'card_id', 'country'
+        )->withPivot('status');
+    }
+
+
 }

@@ -9,12 +9,14 @@ use App\Interfaces\{
     DashboardInterface,
     BlogInterface,
     BillInterface,
+    CardInterface,
     SupportInterface,
 };
 use App\Repositories\{
     AuthRepository,
     BillRepository,
     BlogRepository,
+    CardRepository,
     WalletRepository,
     ProfileRepository,
     DashboardRepository,
@@ -48,5 +50,6 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(BillInterface::class, BillRepository::class);
         $this->app->bind(BlogInterface::class, BlogRepository::class);
         $this->app->bind(SupportInterface::class, SupportRepository::class);
+        $this->app->bind(CardInterface::class, CardRepository::class);
     }
 }
