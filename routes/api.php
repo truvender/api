@@ -106,6 +106,7 @@ Route::prefix('v1')->group( function ()
                 Route::post('fund/complete', [Wallet::class, 'completeFund']);
                 Route::post('transfer', [Wallet::class, 'transfer']);
             });
+            
             Route::prefix('crypto')->group(function () {
                 Route::post('new-wallet', [Wallet::class, 'newCryptoWallet']);
                 Route::post('transfer', [Cryptos::class, 'transfer']);
@@ -143,5 +144,4 @@ Route::prefix('v1')->group( function ()
         
     });
 
-    
 });

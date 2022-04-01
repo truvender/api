@@ -108,11 +108,19 @@ if (!function_exists('blockEndpoint')) {
         $base_url = config('services.block_cypher.url');
 
         return $useToken ? $base_url . "/$currency_symbol/$ev/$endpoint?token=" . $key 
-            : $base_url . "$currency_symbol/$ev/$endpoint";
+            : $base_url . "/$currency_symbol/$ev/$endpoint";
     }
 }
 
 
+if(!function_exists('addressBalance')){
+    function addressBalance($currency_symbol, $address,)
+    {
+        $endpoint = blockEndpoint($currency_symbol, "addrs/$address/balance");
+        $balance = Http::get($endpoint)->json();
+        return $balance['final_balance'];
+    }
+}
 if (!function_exists('createCryptoTransaction')) {
     function createCryptoTransaction($from, $to, $value, $currency_symbol)
     {

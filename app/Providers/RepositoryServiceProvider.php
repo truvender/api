@@ -10,6 +10,7 @@ use App\Interfaces\{
     BlogInterface,
     BillInterface,
     CardInterface,
+    CryptoInterface,
     SupportInterface,
 };
 use App\Repositories\{
@@ -17,6 +18,7 @@ use App\Repositories\{
     BillRepository,
     BlogRepository,
     CardRepository,
+    CryptoRepository,
     WalletRepository,
     ProfileRepository,
     DashboardRepository,
@@ -51,5 +53,6 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(BlogInterface::class, BlogRepository::class);
         $this->app->bind(SupportInterface::class, SupportRepository::class);
         $this->app->bind(CardInterface::class, CardRepository::class);
+        $this->app->bind(CryptoInterface::class, CryptoRepository::class);
     }
 }
