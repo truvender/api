@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-use App\Models\Bank;
+use App\Models\User;
 use App\Interfaces\DashboardInterface;
 
 class DashboardRepository implements DashboardInterface {
@@ -13,7 +13,7 @@ class DashboardRepository implements DashboardInterface {
      */
     public function userData()
     {
-        $user = auth()->user();
+        $user = User::whereId(auth()->user()->id)->first();
         $profile = $user->profile;
         $settings = $user->settings;
         $wallets = $user->wallets;

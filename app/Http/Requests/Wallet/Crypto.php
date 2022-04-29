@@ -4,7 +4,7 @@ namespace App\Http\Requests\Wallet;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class DepositRequest extends FormRequest
+class Crypto extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,11 @@ class DepositRequest extends FormRequest
     public function rules()
     {
         return [
-            'amount' => ['required', 'numeric', 'min:'.config('truvender.min_ngn_trx_amount')],
+            'value' => 'required|numeric',
+            'amount_usd' => 'required|numeric',
+            'address' => 'required',
+            'currency' => 'required',
+            'note' => 'nullable'
         ];
     }
 }

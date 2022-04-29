@@ -16,8 +16,6 @@ use Illuminate\Auth\Events\Registered;
 
 class AuthRepository implements AuthInterface {
 
-    use Jwt;
-
     /**
      * Register user @param request
      */
@@ -72,7 +70,10 @@ class AuthRepository implements AuthInterface {
 
         $user = User::where('username', $request['username'])->firstOrFail();
 
-        return $this->respondWithToken($token);
+        return [
+            'token' => $token,
+            'user' => $user,
+        ];
     }
 
     /**
@@ -80,7 +81,7 @@ class AuthRepository implements AuthInterface {
      */
     public function logout()
     {
-        $user = auth()->user();
+        $user = User::whereId(auth()->user()->id)->first();
         $user->update([
             'has_verify_otp' => false
         ]);

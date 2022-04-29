@@ -26,7 +26,6 @@ class Profile extends FormRequest
         return [
             'firstname' => 'required',
             'lastname' => 'required',
-            'avatar' => 'nullable|mimes:png,jpg,svg|size:3072',
         ];
     }
 }

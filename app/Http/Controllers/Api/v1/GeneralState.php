@@ -79,6 +79,7 @@ class GeneralState extends Controller
                 'promotions' => $this->promotions(),
                 
             ], 'request approved!');
+            
         } catch (\Throwable $err) {
             return $this->error($err->getMessage(), 500, null);
         }

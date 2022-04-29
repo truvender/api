@@ -100,7 +100,9 @@ Route::prefix('v1')->group( function ()
          */
         Route::group(['prefix' => 'wallet'], function () {
 
-            Route::post('wallets', [Wallet::class, 'userWallet']);
+
+            Route::get('wallets', [Wallet::class, 'userWallet']);
+
             Route::group(['prefix' => 'fiat'], function () {
                 Route::post('fund', [Wallet::class, 'nairaFund']);
                 Route::post('fund/complete', [Wallet::class, 'completeFund']);
@@ -114,9 +116,11 @@ Route::prefix('v1')->group( function ()
 
             Route::group(['prefix' => 'profile'], function () {
                 Route::post('/update', [Profiles::class, 'updateProfile']);
+                Route::post('upload/avatar', [Profiles::class, 'uploadAvatar']);
                 Route::post('/banking-detail/add', [Profiles::class, 'addAccount']);
                 Route::post('/change-password', [Profiles::class, 'changePassword']);
                 Route::post('/settings', [Profiles::class, 'changeSettings']);
+                Route::post('/update-profile-photo', [Profile::class, 'uploadPhoto']);
             });
 
             Route::group(['prefix' => 'bills'], function () {

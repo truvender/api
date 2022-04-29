@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Traits\ApiResponse;
 use App\Interfaces\WalletInterface;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Wallet\Crypto;
 use App\Http\Requests\Wallet\Deposit;
 use App\Http\Requests\Wallet\Transfer;
 use App\Http\Requests\Wallet\DepositRequest;
@@ -17,6 +18,17 @@ class Wallet extends Controller
     public function __construct(WalletInterface $interface)
     {
         $this->interface = $interface;
+    }
+
+
+    public function userWallet()
+    {
+        try {
+            $wallets = $this->interface->getWallets();
+            return $this->success($wallets, 'request approved!');
+        } catch (\Throwable $err) {
+            return $this->error($err->getMessage(), 500);
+        }
     }
 
 
@@ -59,6 +71,26 @@ class Wallet extends Controller
         try {
             $transferFund = $this->interface->transfer($request);
             return $this->success($transferFund, 'request approved!');
+        } catch (\Throwable $err) {
+            return $this->error($err->getMessage(), 500);
+        }
+    }
+
+
+    /**
+     * transfer crypto
+     * @param Transfer $request
+     * @return \Http\Traits\ApiResponse
+     */
+    public function cryptoTransfer(Crypto $request)
+    {
+        try {
+            $transfer = $this->interface->cryptoTransfer($request);
+            if ($transfer['error'] == true) {
+                return $this->error($transfer['message'], 500);
+            }
+
+            return $this->success($transfer['data'], 'transfer successful!');
         } catch (\Throwable $err) {
             return $this->error($err->getMessage(), 500);
         }

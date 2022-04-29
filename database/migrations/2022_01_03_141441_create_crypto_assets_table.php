@@ -18,6 +18,7 @@ class CreateCryptoAssetsTable extends Migration
             $table->string('name')->unique();
             $table->string('image');
             $table->string('symbol')->nullable();
+            $table->double('fee')->default(0);
             $table->boolean('is_available')->default(false);
         });
     }

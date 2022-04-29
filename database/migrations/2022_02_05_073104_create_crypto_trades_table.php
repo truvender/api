@@ -15,8 +15,8 @@ class CreateCryptoTradesTable extends Migration
     {
         Schema::create('crypto_trades', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('user_id')->unsigned();
-            $table->string('asset_id')->unsigned();
+            $table->string('user_id');
+            $table->string('asset_id');
             $table->boolean('sell')->default(false)->comment("0: buy, 1: sell");
             $table->double('amount_usd');
             $table->double('value');

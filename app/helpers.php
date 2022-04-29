@@ -198,6 +198,7 @@ if (!function_exists('getTxFee')) {
     }
 }
 
+
 if (!function_exists('validateAccount')) {
     function validateAccount($bank, $account)
     {
@@ -260,7 +261,7 @@ if (!function_exists('createUrlSlug')) {
     function createUrlSlug($string)
     {
         $word_delimiter = '-';
-        $slug = iconv('UTF-8', 'ASCII//TRANSLIT', $input);
+        $slug = iconv('UTF-8', 'ASCII//TRANSLIT', $string);
         $slug = preg_replace("/[^a-zA-Z0-9\/_|+ -]/", '', $slug);
         $slug = strtolower(trim($slug, '-'));
         $slug = preg_replace("/[\/_|+ -]+/", $word_delimiter, $slug);
