@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\v1\{
     Dashboards,
     Authentication,
     GiftCards,
+    Kyc,
     Posts,
     Support,
 };
@@ -87,7 +88,6 @@ Route::prefix('v1')->group( function ()
         Route::get('/session/user', [Dashboards::class, 'userSessionData']);
 
 
-
         Route::group(['prefix' => 'support/conversation'], function (){
             Route::post('start', [Support::class, 'startConversation']);
             Route::post('accept', [Support::class, 'acceptConversation']);
@@ -129,6 +129,19 @@ Route::prefix('v1')->group( function ()
                 Route::post('cable-subscription', [Bills::class, 'subscribeCable']);
             });
 
+        });
+
+        /**
+         * Kyc
+         */
+        Route::group(['prefix' => 'kyc'], function () {
+            Route::post('/submit', [Kyc::class, 'submitKycDoc']);
+            Route::get('/getStatus', [Kyc::class, 'getStatus']);
+            
+            //Admin
+            Route::post('/approve/{request_id}', [Kyc::class, 'approveKycRequest']);
+            Route::post('/disapprove/{request_id}', [Kyc::class, 'disapproveKycRequest']);
+            Route::get('/get-requests', [Kyc::class, 'getRequests']);
         });
 
 

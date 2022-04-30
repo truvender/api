@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Blog;
+namespace App\Http\Requests\Verification;
 
 use App\Helpers\Constants;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdatePost extends FormRequest
+class SubmitDoc extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -14,7 +14,7 @@ class UpdatePost extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -25,11 +25,10 @@ class UpdatePost extends FormRequest
     public function rules()
     {
         return [
-            'category' => 'nullable|uuid',
-            'title' => 'required|string',
-            'image' => Constants::IMAGE_VALIDATION,
-            'body' => 'required|string',
-            'post' => 'required',
+            'name' => 'required|string',
+            'date_of_birth' => 'required|string',
+            'type' => 'required|string',
+            'document' => Constants::REQUIRED_IMAGE_VALIDATION,
         ];
     }
 }

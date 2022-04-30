@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\v1;
 
+use App\Helpers\Constants;
 use Illuminate\Http\Request;
 use App\Http\Traits\ApiResponse;
 use App\Http\Requests\User\{
@@ -43,7 +44,7 @@ class Profiles extends Controller
     public function uploadAvatar(Request $request)
     {
         try {
-            $request->validate([ 'avatar' => 'nullable|mimes:png,jpg,svg|size:10240' ]);
+            $request->validate([ 'avatar' => Constants::REQUIRED_IMAGE_VALIDATION ]);
             $avatar = $this->interface->uploadPhoto($request);
             return $this->success($avatar, 'request approved!');
         } catch (\Throwable $err) {
