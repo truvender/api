@@ -16,6 +16,7 @@ class CreateTransactionsTable extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('wallet_id');
+            $table->string('description')->nullable();
             $table->string('trxn_ref')->unique();
             $table->string('type');
             $table->double('amount');

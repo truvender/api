@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Bank;
+use App\Models\User;
 use App\Interfaces\ProfileInterface;
 use Illuminate\Support\Facades\Hash;
 
@@ -10,15 +11,8 @@ class ProfileRepository implements ProfileInterface {
 
     public function profileUpdate($request)
     {
-        $user = auth()->user();
+        $user = User::whereId(auth()->user()->id)->first();
         $profile = $user->profile;
-
-        if ($request->hasFile('avatar')) {
-            $upload = uploadFile($request->file('avatar'), "images/".now()->format('Y')."/profile_pictures/");
-            $user->update([
-                'profile_photo_path' => $upload
-            ]);
-        }
 
         $profile->update([
             'firstname' => $request->firstname == 'undefined' ? null : $request->firstname,
@@ -28,9 +22,24 @@ class ProfileRepository implements ProfileInterface {
     }
 
 
+    public function uploadPhoto($request)
+    {
+        $user = User::whereId(auth()->user()->id)->first();
+        if ($request->hasFile('avatar')) {
+            $upload = uploadFile($request->file('avatar'), "images/" . now()->format('Y') . "/profile_pictures/");
+            $user->update([
+                'profile_photo_path' => $upload
+            ]);
+
+            return $upload;
+        }
+        return null;
+    }
+
+
     public function changePassword($request)
     {
-        $user = auth()->user();
+        $user = User::whereId(auth()->user()->id)->first();
         $checkLastPassword = Hash::check($request->old_password, $user->password);
         if ($checkLastPassword) {
             $new_password = Hash::make($request->password);
@@ -42,7 +51,7 @@ class ProfileRepository implements ProfileInterface {
 
     public function addAccount($request)
     {
-        $user = auth()->user();
+        $user = User::whereId(auth()->user()->id)->first();
         $banking = $user->bankingAccount;
         $bank = Bank::where('code', $request->bank)->first();
 
@@ -63,7 +72,7 @@ class ProfileRepository implements ProfileInterface {
 
     public function settingUpdate($request)
     {
-        $user = auth()->user();
+        $user = User::whereId(auth()->user()->id)->first();
         $setting = $user->settings;
 
         if ($request->pin && $request->pin != null) {

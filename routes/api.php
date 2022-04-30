@@ -11,6 +11,8 @@ use App\Http\Controllers\Api\v1\{
     Profiles,
     Dashboards,
     Authentication,
+    GiftCards,
+    Kyc,
     Posts,
     Support,
 };
@@ -86,7 +88,6 @@ Route::prefix('v1')->group( function ()
         Route::get('/session/user', [Dashboards::class, 'userSessionData']);
 
 
-
         Route::group(['prefix' => 'support/conversation'], function (){
             Route::post('start', [Support::class, 'startConversation']);
             Route::post('accept', [Support::class, 'acceptConversation']);
@@ -99,12 +100,15 @@ Route::prefix('v1')->group( function ()
          */
         Route::group(['prefix' => 'wallet'], function () {
 
-            Route::post('wallets', [Wallet::class, 'userWallet']);
+
+            Route::get('wallets', [Wallet::class, 'userWallet']);
+
             Route::group(['prefix' => 'fiat'], function () {
                 Route::post('fund', [Wallet::class, 'nairaFund']);
                 Route::post('fund/complete', [Wallet::class, 'completeFund']);
                 Route::post('transfer', [Wallet::class, 'transfer']);
             });
+            
             Route::prefix('crypto')->group(function () {
                 Route::post('new-wallet', [Wallet::class, 'newCryptoWallet']);
                 Route::post('transfer', [Cryptos::class, 'transfer']);
@@ -112,9 +116,11 @@ Route::prefix('v1')->group( function ()
 
             Route::group(['prefix' => 'profile'], function () {
                 Route::post('/update', [Profiles::class, 'updateProfile']);
+                Route::post('upload/avatar', [Profiles::class, 'uploadAvatar']);
                 Route::post('/banking-detail/add', [Profiles::class, 'addAccount']);
                 Route::post('/change-password', [Profiles::class, 'changePassword']);
                 Route::post('/settings', [Profiles::class, 'changeSettings']);
+                Route::post('/update-profile-photo', [Profile::class, 'uploadPhoto']);
             });
 
             Route::group(['prefix' => 'bills'], function () {
@@ -123,6 +129,19 @@ Route::prefix('v1')->group( function ()
                 Route::post('cable-subscription', [Bills::class, 'subscribeCable']);
             });
 
+        });
+
+        /**
+         * Kyc
+         */
+        Route::group(['prefix' => 'kyc'], function () {
+            Route::post('/submit', [Kyc::class, 'submitKycDoc']);
+            Route::get('/getStatus', [Kyc::class, 'getStatus']);
+            
+            //Admin
+            Route::post('/approve/{request_id}', [Kyc::class, 'approveKycRequest']);
+            Route::post('/disapprove/{request_id}', [Kyc::class, 'disapproveKycRequest']);
+            Route::get('/get-requests', [Kyc::class, 'getRequests']);
         });
 
 
@@ -134,8 +153,12 @@ Route::prefix('v1')->group( function ()
                 Route::post('send-message', [Support::class, 'newMessage']);
             });
         });
+
+
+        Route::prefix('cards')->group(function () {
+            Route::get('list', [GiftCards::class, 'listGiftCards']);
+        });
         
     });
 
-    
 });

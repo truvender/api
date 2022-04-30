@@ -10,11 +10,15 @@ use App\Models\Country;
 use App\Models\Deposit;
 use App\Models\FiatRate;
 use App\Models\Transfer;
+use App\Models\CryptoAsset;
 use App\Models\Transaction;
 use App\Models\BankTransfer;
 use App\Models\TransactionMeta;
 use Illuminate\Support\Facades\DB;
 use App\Interfaces\WalletInterface;
+use App\Models\CryptoRecord;
+use App\Services\BlockcypherService;
+use App\Services\Signer;
 
 class WalletRepository implements WalletInterface {
 
@@ -28,11 +32,38 @@ class WalletRepository implements WalletInterface {
         return Transaction::whereId($transaction_id)->with('metas')->first();
     }
 
+    public function getWallets()
+    {
+        $user = User::whereId(auth()->user()->id)->first();
+        $wallets = $user->wallets->map(function($wallet){
+            $transactions = $wallet->transactions;
+            
+            $item = [
+                "id" => $wallet->id,
+                "type" => $wallet->type,
+                "balance" => $wallet->balance,
+                "address" => $wallet->address,
+                "transactions" => $transactions,
+            ];
+
+            if ($wallet->type != 'fiat') {
+                $item["asset"] = [
+                    "name" => $wallet->asset->name,
+                    "symbol" => $wallet->asset->symbol,
+                    "image" => $wallet->asset->image,
+                ];
+            }
+            return $item;
+
+        });
+        return $wallets;
+    }
+
     
     public function fundDefaultWallet($request)
     {
         return DB::transaction(function () use ($request) {
-            $user = auth()->user();
+            $user = User::whereId(auth()->user()->id)->first();
             $code = tx_code();
             $wallet = $user->wallets()->where('type', 'fiat')->sole();
             $profile = $user->profile;
@@ -74,7 +105,8 @@ class WalletRepository implements WalletInterface {
     public function completeDefaultWalletFunding($request)
     {
         return DB::transaction(function () use ($request) {
-            $user = auth()->user();
+            
+            $user = User::whereId(auth()->user()->id)->first();
 
             $wallet = $user->wallets()->where('type', 'fiat')->sole();
 
@@ -150,7 +182,7 @@ class WalletRepository implements WalletInterface {
 
     public function transfer($request)
     {
-        $user = auth()->user();
+        $user = User::whereId(auth()->user()->id)->first();
         $wallet = $user->wallets()->where('type', 'fiat')->sole();
         $code = tx_code();
         $amount = $request->amount;
@@ -167,12 +199,11 @@ class WalletRepository implements WalletInterface {
             'fee' => $fee,
         ]);
 
-
         $transactionMeta = TransactionMeta::insert([
             ['key' => 'reason',
-            'value' => 'transfer',],
+            'value' => 'transfer', 'transaction_id' => $transaction->id],
             ['key' => 'transfer_type',
-            'value' => $type]
+            'value' => $type, 'transaction_id' => $transaction->id]
         ]);
 
 
@@ -268,6 +299,90 @@ class WalletRepository implements WalletInterface {
                 'transfer' => $transfer,
             ]
         ];
+    }
+
+
+    public function cryptoTransfer($request)
+    {
+        $user = User::whereId(auth()->user()->id)->first();
+        $to = $request->address;
+        $usd_amount = $request->amount_usd;
+        $code = tx_code();
+        $amountCrypto = $request->value;
+        
+        
+        $asset = CryptoAsset::where('symbol', $request->currency)->firstOrFail();
+        $fee = $asset->fee;
+
+        $wallet = $user->wallets()->where('type', 'crypto')->whereAssetId($asset->id)->sole();
+
+        $block = new BlockcypherService();
+        $wallet->update([
+            'balance' => $block->balance($wallet->address, $asset->symbol)['final_balance'],
+        ]);
+
+        if ($wallet->balance < $amountCrypto + $fee) {
+            return [
+                'error' => true,
+                'message' => 'insufficient wallet balance'
+            ];
+        }
+
+        $transaction = Transaction::create([
+            'user_id' => $user->id,
+            'wallet_id' => $wallet->id,
+            'trxn_ref' => $code,
+            'type' => 'debit',
+            'amount' => $amountCrypto,
+            'fee' => $fee,
+        ]);
+
+        $transactionMeta = TransactionMeta::create([
+            'key' => 'reason',
+            'value' => 'transfer crypto',
+            'transaction_id' => $transaction->id
+        ]);
+
+        $createTransaction = $block->createTransaction($wallet->address, $to, $amountCrypto, $asset->symbol);
+
+        if ($createTransaction['status'] == true) {
+            $createRecord = CryptoRecord::create([
+                'transaction_id' => $transaction->id,
+                'asset_id' => $asset->id,
+                'tx_hash' => $createTransaction['hash'],
+                'block_height' => $createTransaction['block_height'],
+                'tx_input_n' => $createTransaction['inputs']['addresses'][0],
+                'tx_output_n' => $createTransaction['outputs']['addresses'][0],
+                'value' => $amountCrypto,
+                'ref_balance' => $wallet->balance,
+            ]);
+
+            $signature = (new Signer())->sign($createTransaction['tosign'], $wallet->private);
+
+            $sendTransaction = $block->sendTransaction(strtolower($asset->symbol),$createTransaction['tosign'], $signature, $wallet->private);
+
+            if ($sendTransaction['status'] == true) {
+
+                $wallet->update([
+                    'balance' => $block->balance($wallet->address, $asset->symbol)['final_balance'],
+                ]);
+
+                return [
+                    'error' => false,
+                    'message' => 'transaction completed',
+                    'data' => [
+                        'transaction' => $transaction,
+                        'crypto_record' => $createRecord,
+                    ]
+                ];
+            }
+
+            return [
+                'error' => true,
+                'message' => 'could not complete transaction'
+            ];
+        }
+
     }
 }
 

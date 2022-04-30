@@ -24,7 +24,7 @@ class DepositRequest extends FormRequest
     public function rules()
     {
         return [
-            'amount' => 'required|numeric',
+            'amount' => ['required', 'numeric', 'min:'.config('truvender.min_ngn_trx_amount')],
         ];
     }
 }

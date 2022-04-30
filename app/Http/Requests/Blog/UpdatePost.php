@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Blog;
 
+use App\Helpers\Constants;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdatePost extends FormRequest
@@ -24,7 +25,11 @@ class UpdatePost extends FormRequest
     public function rules()
     {
         return [
-            //
+            'category' => 'nullable|uuid',
+            'title' => 'required|string',
+            'image' => Constants::IMAGE_VALIDATION,
+            'body' => 'required|string',
+            'post' => 'required',
         ];
     }
 }

@@ -108,11 +108,19 @@ if (!function_exists('blockEndpoint')) {
         $base_url = config('services.block_cypher.url');
 
         return $useToken ? $base_url . "/$currency_symbol/$ev/$endpoint?token=" . $key 
-            : $base_url . "$currency_symbol/$ev/$endpoint";
+            : $base_url . "/$currency_symbol/$ev/$endpoint";
     }
 }
 
 
+if(!function_exists('addressBalance')){
+    function addressBalance($currency_symbol, $address,)
+    {
+        $endpoint = blockEndpoint($currency_symbol, "addrs/$address/balance");
+        $balance = Http::get($endpoint)->json();
+        return $balance['final_balance'];
+    }
+}
 if (!function_exists('createCryptoTransaction')) {
     function createCryptoTransaction($from, $to, $value, $currency_symbol)
     {
@@ -190,6 +198,7 @@ if (!function_exists('getTxFee')) {
     }
 }
 
+
 if (!function_exists('validateAccount')) {
     function validateAccount($bank, $account)
     {
@@ -252,7 +261,7 @@ if (!function_exists('createUrlSlug')) {
     function createUrlSlug($string)
     {
         $word_delimiter = '-';
-        $slug = iconv('UTF-8', 'ASCII//TRANSLIT', $input);
+        $slug = iconv('UTF-8', 'ASCII//TRANSLIT', $string);
         $slug = preg_replace("/[^a-zA-Z0-9\/_|+ -]/", '', $slug);
         $slug = strtolower(trim($slug, '-'));
         $slug = preg_replace("/[\/_|+ -]+/", $word_delimiter, $slug);

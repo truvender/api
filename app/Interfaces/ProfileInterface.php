@@ -12,5 +12,7 @@ interface ProfileInterface {
 
     public function settingUpdate($request);
 
+    public function uploadPhoto($request);
+
 
 }

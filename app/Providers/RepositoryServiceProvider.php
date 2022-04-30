@@ -9,16 +9,22 @@ use App\Interfaces\{
     DashboardInterface,
     BlogInterface,
     BillInterface,
+    CardInterface,
+    CryptoInterface,
     SupportInterface,
+    VerificationInterface,
 };
 use App\Repositories\{
     AuthRepository,
     BillRepository,
     BlogRepository,
+    CardRepository,
+    CryptoRepository,
     WalletRepository,
     ProfileRepository,
     DashboardRepository,
     SupportRepository,
+    VerificationRepository,
 };
 use Illuminate\Support\ServiceProvider;
 
@@ -48,5 +54,8 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(BillInterface::class, BillRepository::class);
         $this->app->bind(BlogInterface::class, BlogRepository::class);
         $this->app->bind(SupportInterface::class, SupportRepository::class);
+        $this->app->bind(CardInterface::class, CardRepository::class);
+        $this->app->bind(CryptoInterface::class, CryptoRepository::class);
+        $this->app->bind(VerificationInterface::class, VerificationRepository::class);
     }
 }

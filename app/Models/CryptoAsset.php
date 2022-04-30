@@ -16,17 +16,6 @@ class CryptoAsset extends Model
 
 
     /**
-     * Get all of the transactions for the CryptoAsset
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function transactions()
-    {
-        return $this->hasMany(Transaction::class, 'asset_id', 'id');
-    }
-
-
-    /**
      * Get the rate associated with the CryptoAsset
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
@@ -37,4 +26,14 @@ class CryptoAsset extends Model
     }
 
 
+
+    /**
+     * Get all of the trades for the CryptoAsset
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function trades()
+    {
+        return $this->hasMany(CryptoTrade::class, 'asset_id');
+    }
 }

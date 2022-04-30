@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Blog;
 
+use App\Helpers\Constants;
 use Illuminate\Foundation\Http\FormRequest;
 
 class SavePost extends FormRequest
@@ -26,7 +27,7 @@ class SavePost extends FormRequest
         return [
             'category' => 'nullable|uuid',
             'title' => 'required|string',
-            'image' => 'nullable|image|mimes:png,jpg,gif,svg|max:10240',
+            'image' => Constants::IMAGE_VALIDATION,
             'body' => 'required|string',
         ];
     }

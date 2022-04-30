@@ -24,12 +24,12 @@ class Transfer extends FormRequest
     public function rules()
     {
         return [
-            'amount' => 'required|numeric',
-            'account_number' => 'required|numeric',
-            'account_name' => 'required',
-            'account_bank' => 'required',
-            'currency' => 'required',
-            'b2b' => 'required',
+            'amount' => 'required|numeric|min:'.config('truvender.min_ngn_trx_amount'),
+            'account_number' => 'sometimes|numeric',
+            'account_name' => 'sometimes',
+            'account_bank' => 'sometimes',
+            'currency' => 'sometimes',
+            'b2b' => 'sometimes',
             'type' => 'required'
         ];
     }
