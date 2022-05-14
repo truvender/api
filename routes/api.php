@@ -137,7 +137,7 @@ Route::prefix('v1')->group( function ()
         Route::group(['prefix' => 'kyc'], function () {
             Route::post('/submit', [Kyc::class, 'submitKycDoc']);
             Route::get('/getStatus', [Kyc::class, 'getStatus']);
-            
+
             //Admin
             Route::post('/approve/{request_id}', [Kyc::class, 'approveKycRequest']);
             Route::post('/disapprove/{request_id}', [Kyc::class, 'disapproveKycRequest']);
@@ -154,6 +154,9 @@ Route::prefix('v1')->group( function ()
             });
         });
 
+        Route::group(['prefix' => 'trades'],function () {
+            
+        });
 
         Route::prefix('cards')->group(function () {
             Route::get('list', [GiftCards::class, 'listGiftCards']);

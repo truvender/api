@@ -17,6 +17,9 @@ class CreateCardsTable extends Migration
             $table->uuid('id')->primary();
             $table->string('name')->unique();
             $table->string('image');
+            $table->string('product_id')->nullable();
+            $table->text('description')->nullable();
+            $table->boolean('is_available')->nullable()->default(true);
         });
     }
 

@@ -180,6 +180,9 @@ class WalletRepository implements WalletInterface {
 
 
 
+    /**
+     * Performs Fiat Transfer
+     */
     public function transfer($request)
     {
         $user = User::whereId(auth()->user()->id)->first();
@@ -302,6 +305,9 @@ class WalletRepository implements WalletInterface {
     }
 
 
+    /**
+     * Performs Crypto Transfer
+     */
     public function cryptoTransfer($request)
     {
         $user = User::whereId(auth()->user()->id)->first();

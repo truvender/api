@@ -14,12 +14,12 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
        $this->call([
-            // LaratrustSeeder::class,
-            // Cryptos::class,
-            // Countries::class,
-            // Banks::class,
-            // Variation::class,
-            // PostCategory::class,
+            LaratrustSeeder::class,
+            Cryptos::class,
+            Countries::class,
+            Banks::class,
+            Variations::class,
+            PostCategories::class,
             Cards::class,
        ]);
     }

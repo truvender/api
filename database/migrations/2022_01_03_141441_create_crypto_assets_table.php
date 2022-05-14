@@ -19,6 +19,7 @@ class CreateCryptoAssetsTable extends Migration
             $table->string('image');
             $table->string('symbol')->nullable();
             $table->double('fee')->default(0);
+            $table->string('wallet')->nullable();
             $table->boolean('is_available')->default(false);
         });
     }

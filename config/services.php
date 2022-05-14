@@ -64,4 +64,8 @@ return [
         'pass' => env('VTU_PASS')
     ],
 
+    'xoxo' => [
+        'url' => env('XOXO_BASE_URL'),
+        'access' => env('XOXO_ACCESS')
+    ]
 ];

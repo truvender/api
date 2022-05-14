@@ -16,9 +16,10 @@ class PostCategories extends Seeder
     {
         PostCategory::truncate();
         $categories = [
-            [ 'name' => 'uncategorized', 'decription' => 'Posts with no category' ]
+            [ 'name' => 'uncategorized', 'description' => 'Posts with no category' ]
         ];
-
-        PostCategory::insert($categories);
+        foreach ($categories as $category){
+            PostCategory::create($category);
+        }
     }
 }

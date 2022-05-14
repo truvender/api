@@ -12,6 +12,7 @@ use App\Interfaces\{
     CardInterface,
     CryptoInterface,
     SupportInterface,
+    TradeInterface,
     VerificationInterface,
 };
 use App\Repositories\{
@@ -24,6 +25,7 @@ use App\Repositories\{
     ProfileRepository,
     DashboardRepository,
     SupportRepository,
+    TradeRepository,
     VerificationRepository,
 };
 use Illuminate\Support\ServiceProvider;
@@ -57,5 +59,6 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(CardInterface::class, CardRepository::class);
         $this->app->bind(CryptoInterface::class, CryptoRepository::class);
         $this->app->bind(VerificationInterface::class, VerificationRepository::class);
+        $this->app->bind(TradeInterface::class, TradeRepository::class);
     }
 }
